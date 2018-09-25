@@ -1,0 +1,19 @@
+[ExtensionOf(classStr(NumberSeqModuleBank))]
+final class NumberSeqModuleBank_Extension
+{
+    public void loadModule_Extension()
+    {
+        NumberSeqDatatype datatype = NumberSeqDatatype::construct();
+
+        datatype.parmDatatypeId(extendedtypenum(CompanyBankAccountId));
+        datatype.parmReferenceHelp("Bank account ID Sequence"); 
+        datatype.parmWizardIsContinuous(true);
+        datatype.parmWizardIsManual(NoYes::No);
+        datatype.parmWizardIsChangeDownAllowed(NoYes::No);
+        datatype.parmWizardIsChangeUpAllowed(NoYes::No);
+        datatype.parmSortField(15);
+        datatype.addParameterType(NumberSeqParameterType::DataArea, true, false);
+        this.create(datatype);
+    }
+
+}

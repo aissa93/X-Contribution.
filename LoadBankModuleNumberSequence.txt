@@ -1,0 +1,14 @@
+class LoadBankModuleNumberSequence
+{        
+    /// <summary>
+    /// Runs the class with the specified arguments.
+    /// </summary>
+    /// <param name = "_args">The specified arguments.</param>
+    public static void main(Args _args)
+    {        
+        NumberSeqModuleBank   NSME = new NumberSeqModuleBank();
+        NSME.loadModule_Extension();
+        info("FINIUSHED");
+    }
+
+}

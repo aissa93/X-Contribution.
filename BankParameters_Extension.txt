@@ -1,0 +1,9 @@
+[ExtensionOf(tableStr(BankParameters) )]
+final class BankParameters_Extension
+{
+    client server static NumberSequenceReference numRefBankAccountId()
+    {
+        return NumberSeqReference::findReference(extendedTypeNum(CompanyBankAccountId));
+    }
+
+}
