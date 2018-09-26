@@ -1,0 +1,6 @@
+
+       // Get Vendor Account from LedgerDimention
+        _VendAccount = LedgerDimensionFacade::getDisplayValueForLedgerDimension(LedgerDiminsion);
+        
+	//Get LedgerDimension from BankAccountID
+        _ledgerDimension = offsrtAccountObj.setValue(LedgerDynamicAccountHelper::getDynamicAccountFromAccountNumber(VendTable::find(_VendAccount).DefaultBankAccount ,LedgerJournalACType::Bank));
