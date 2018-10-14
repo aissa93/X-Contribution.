@@ -1,0 +1,17 @@
+//General Steps
+1-Create view.
+2-Create server method on the view and the type of this method should be string and must return a method of sysComputedColumn calss
+	-the Method on syscomputedcolumn method must return sql syntax as a string.
+3-creat computed column of type expected and chose the the newly created method in Method view property.
+
+Exmple:
+1-Create view (AIA_CustView)
+2- add data sourece (Custtable)
+3- add field CustNumber
+4- creat to get Custname like the method( CustName,CustBalance, Cust_CustGroup )
+5- create two method in syscomputedcolunm class as the files(getCustBalance,getPartyName)
+
+To try the abbove Scenario Import the .xpo Project the create 2 function in class SysComputedColumn as 2 the files (getCustBalance, getPartyName) then compile and sync the view and open it.
+#Happy DAXING
+
+
