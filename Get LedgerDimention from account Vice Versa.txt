@@ -1,0 +1,6 @@
+
+       // Get Vendor Account from LedgerDimention
+        _VendAccount = LedgerDimensionFacade::getDisplayValueForLedgerDimension(LedgerDiminsion);
+        
+	//Get LedgerDimension from BankAccountID
+        _ledgerDimension = LedgerDynamicAccountHelper::getDynamicAccountFromAccountNumber(_BankAccountID ,LedgerJournalACType::Bank));
