@@ -1,0 +1,31 @@
+[ExtensionOf(formStr(BankAccountTable))]
+final class BankaccountTable_Extension
+{
+    //event handeler for form Initialized 
+    [FormEventHandler(formstr( BankAccountTable ) ,FormEventType::Initialized)]
+    public void initializedFormHandler(xFormRun formRun, FormEventArgs e)
+    {
+
+        //create object from mandatory field and override modified method to set the number sequence to the form field that I want 
+        FormDataObject LedgDimobj = this.BankAccountTable_ds.object( fieldNum(BankAccountTable, LedgerDimension), 1);
+        LedgDimobj.registerOverrideMethod( methodStr(FormDataObject, modified), formMethodStr( BankAccountTable, modifiedImplementation), this);
+
+    }
+
+    public void modifiedImplementation(FormDataObject dataSourceField1 )
+    {
+
+
+        FormDataObject bankaccountobj = this.BankAccountTable_ds.object( fieldNum(BankAccountTable, AccountID), 1);
+        NumberSeq num;
+        num = NumberSeq::newGetNum(BankParameters::numRefBankAccountId()); 
+        //use new number sequece and set it's vale to the form field (Bank account number)
+        ttsbegin;
+        bankaccountobj.setValue(num.num());
+        ttscommit;
+        bankaccountobj.allowEdit(false);
+
+
+    }
+
+}
