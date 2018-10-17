@@ -1,0 +1,1 @@
+Tax::calcTaxAmount(TransTable.TaxGroup, TransTable.TaxItemGroup, TransDate, TransTable.CurrencyCode, TransTable.Amount, TaxModuleType::Module(Sales,purch,....));
