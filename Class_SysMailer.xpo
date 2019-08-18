@@ -1,0 +1,517 @@
+﻿Exportfile for AOT version 1.0 or later
+Formatversion: 1
+
+***Element: CLS
+
+; Microsoft Dynamics AX Class: SysMailer unloaded
+; --------------------------------------------------------------------------------
+  CLSVERSION 1
+  
+  CLASS #SysMailer
+    PROPERTIES
+      Name                #SysMailer
+      Origin              #{2D0916D4-0000-1000-59E3-844D61696C65}
+      LegacyId            #5844
+    ENDPROPERTIES
+    
+    METHODS
+      SOURCE #addRelatedBodyPart
+        #// a related bodypart is typically an image embedded in the mail (instead
+        #// of being referenced from an outside url
+        #// if in the HTML file there's a <img src="myimageref"/> tag, then
+        #// an image from d:\myimage.jpg can be embedded like this:
+        #// addRelatedBodyPart("d:\\myimage.jpg","myimageref")
+        #void addRelatedBodyPart(str _url, str _reference, int _refType = 0)
+        #{
+        #    InteropPermission permission = new InteropPermission(InteropKind::ComInterop);
+        #
+        #    permission.assert();
+        #
+        #    //BP Deviation Documented
+        #    _com.addRelatedBodyPart(_url,_reference,_refType);
+        #
+        #    CodeAccessPermission::revertAssert();
+        #}
+      ENDSOURCE
+      SOURCE #attachments
+        #// Attachments collection
+        #public SysMailerAttachments attachments()
+        #{
+        #    InteropPermission permission = new InteropPermission(InteropKind::ComInterop);
+        #
+        #    permission.assert();
+        #
+        #    //BP Deviation Documented
+        #    return SysMailerAttachments::create(_com);
+        #}
+      ENDSOURCE
+      SOURCE #bodyCharSet
+        #public str bodyCharSet(str arg='')
+        #{
+        #    COM bodyPart;
+        #
+        #    InteropPermission permission = new InteropPermission(InteropKind::ComInterop);
+        #            permission.assert();
+        #
+        #    //BP Deviation Documented
+        #    bodyPart = _com.bodyPart();
+        #
+        #    if (!prmisDefault(arg))
+        #        //BP Deviation Documented
+        #        bodyPart.charSet(arg);
+        #
+        #    //BP Deviation Documented
+        #    return bodyPart.charSet();
+        #}
+      ENDSOURCE
+      SOURCE #ccs
+        #SysMailerAddressField ccs()
+        #{
+        #    InteropPermission permission = new InteropPermission(InteropKind::ComInterop);
+        #
+        #    permission.assert();
+        #
+        #    //BP Deviation Documented
+        #    return SysMailerAddressField::create(_com,SysmailerAddressFieldType::Cc);
+        #}
+      ENDSOURCE
+      SOURCE #classDeclaration
+        #/// <summary>
+        #///    The <c>SysMailer</c> class provides email and newsgroup posting capabilities.
+        #/// </summary>
+        #// This is a framework class. Customizing this class may cause problems with future upgrades to the software.
+        #class SysMailer
+        #{
+        #    #SysMailer
+        #
+        #    COM _com;
+        #    //BP Deviation Documented
+        #    SysMailerConfiguration _configuration;
+        #
+        #    //BP Deviation Documented
+        #    SysMailerFields _fields;
+        #}
+      ENDSOURCE
+      SOURCE #configuration
+        #SysMailerConfiguration configuration(SysMailerConfiguration _mailerConfig = null)
+        #{
+        #    InteropPermission permission = new InteropPermission(InteropKind::ComInterop);
+        #
+        #    permission.assert();
+        #
+        #    if (!prmisDefault(_mailerConfig))
+        #       //BP Deviation Documented
+        #       _com.configuration(_mailerConfig.com());
+        #
+        #    //BP Deviation Documented
+        #    return SysMailerConfiguration::create(_com.configuration());
+        #}
+      ENDSOURCE
+      SOURCE #fields
+        #SysMailerFields fields()
+        #{
+        #    InteropPermission permission = new InteropPermission(InteropKind::ComInterop);
+        #
+        #    permission.assert();
+        #
+        #    //BP Deviation Documented
+        #    return SysMailerFields::create(_com.fields());
+        #}
+      ENDSOURCE
+      SOURCE #fromAddress
+        #// Sender address
+        #public str fromAddress(str addr = '', str name = '')
+        #{
+        #    InteropPermission permission = new InteropPermission(InteropKind::ComInterop);
+        #
+        #    permission.assert();
+        #
+        #    if (!prmisDefault(addr))
+        #    {
+        #        if (!prmisDefault(name))
+        #          //BP Deviation Documented
+        #         _com.from('\"'+ name + '\" <' + addr + '>');
+        #        else
+        #          //BP Deviation Documented
+        #          _com.from(addr);
+        #    }
+        #
+        #    //BP Deviation Documented
+        #    return _com.from();
+        #}
+      ENDSOURCE
+      SOURCE #htmlBody
+        #/// <summary>
+        #/// Sends the body of the email message in an HTML format.
+        #/// </summary>
+        #/// <param name="body">
+        #/// A string expression that contains HTML code that represents the body of the email message; optional.
+        #/// </param>
+        #/// <returns>
+        #/// The body of the email in HTML.
+        #/// </returns>
+        #/// <remarks>
+        #/// The maximum size of the email message body is 10MB. If the size exceeds 10MB, the HTML body is set
+        #/// to an empty string, and a warning message is generated.
+        #/// </remarks>
+        #public str htmlBody(str body='')
+        #{
+        #    InteropPermission permission = new InteropPermission(InteropKind::ComInterop);
+        #
+        #    permission.assert();
+        #
+        #    if (!prmisDefault(body))
+        #    {
+        #        if (strLen(body) <= 10485760) // 10 Mb
+        #        {
+        #            //BP Deviation Documented
+        #            _com.htmlBody(body);
+        #        }
+        #        else
+        #        {
+        #            //BP Deviation Documented
+        #            _com.htmlBody('');
+        #            warning("@SYS100253");
+        #        }
+        #    }
+        #
+        #    //BP Deviation Documented
+        #    return _com.htmlBody();
+        #}
+      ENDSOURCE
+      SOURCE #new
+        #void new(COM c = new COM('CDO.Message'))
+        #{
+        #    COM cdoConfig;
+        #    InteropPermission permission = new InteropPermission(InteropKind::ComInterop);
+        #    ;
+        #
+        #    permission.assert();
+        #
+        #    _com = c;
+        #
+        #    //BP Deviation Documented
+        #    if (_com.configuration() == null)
+        #    {
+        #        //BP Deviation Documented
+        #        cdoConfig =  new COM('CDO.Configuration');
+        #        _configuration = SysMailerConfiguration::create(cdoConfig);
+        #        //BP Deviation Documented
+        #        this.configuration(_configuration);
+        #    }
+        #    else
+        #    {
+        #        //BP Deviation Documented
+        #        _configuration = SysMailerConfiguration::create(_com.configuration());
+        #    }
+        #
+        #    //BP Deviation Documented
+        #    _fields = _configuration.fields();
+        #    _fields.add(#sendUsing,#cdoSendUsingPort);
+        #    _fields.resync();
+        #}
+      ENDSOURCE
+      SOURCE #priority
+        #/// <summary>
+        #/// Determines the priority of the message.
+        #/// </summary>
+        #/// <param name="prio">
+        #/// The priority level of the message, ranging from zero (0) to two (2). Two is the highest priority;
+        #/// zero is the lowest priority. The default value is -1, which is no priority rating.
+        #/// </param>
+        #/// <remarks>
+        #/// Priority determines the contents of the X-Priority header of the email message. If the value of
+        #/// this property is -1, then the email message will not contain the X-Priority header.How this header
+        #/// is used depends on the email software that is used by the recipient of the email message. For
+        #/// example, Outlook assigns special icons to email messages of high priority and low priority.Priority
+        #/// values are found in the <c>eMailPriority</c> enumeration type.
+        #/// </remarks>
+        #public void priority(int prio)
+        #{
+        #    InteropPermission permission = new InteropPermission(InteropKind::ComInterop);
+        #
+        #    SysMailerFields fields;
+        #    permission.assert();
+        #
+        #    fields = this.fields();
+        #
+        #    //BP Deviation Documented
+        #    fields.add(#Importance,prio);
+        #    //BP Deviation Documented
+        #    fields.resync();
+        #
+        #    CodeAccessPermission::revertAssert();
+        #
+        #}
+      ENDSOURCE
+      SOURCE #quickSend
+        #/// <summary>
+        #/// Sends an email message without having to set any properties or collections.
+        #/// </summary>
+        #/// <param name="fromAddr">
+        #/// The sender of the email message, which is typically the email address of the person who sends the
+        #/// message.
+        #/// </param>
+        #/// <param name="toAddr">
+        #/// The destination address of the email.
+        #/// </param>
+        #/// <param name="subject">
+        #/// The subject of the message.
+        #/// </param>
+        #/// <param name="body">
+        #/// The body of the message.
+        #/// </param>
+        #/// <param name="cc">
+        #/// One or more email addresses to send a carbon copy of the message to; optional.
+        #/// </param>
+        #/// <param name="attachments">
+        #/// A comma-delimited list of the attachments to be sent with the email; optional.
+        #/// </param>
+        #/// <remarks>
+        #///  When an email is sent, you can optionally precede the address of the sender or the receiver with
+        #///  the name of the owner.To use the
+        #///  <c>
+        #///  quickSend
+        #///  </c>
+        #///   method:
+        #///  <list type="bullet">
+        #///   <item>
+        #///   <description>Create an instance of the mailer control.</description>
+        #///   </item>
+        #///   <item>
+        #///    <description>
+        #///    Sets the properties and collections that are used by the <c>quickSend</c> method. The properties of
+        #///    the control or collections are all optional.
+        #///    </description>
+        #///   </item>
+        #///   <item>
+        #///    <description>
+        #///    Call the <c>quickSend</c> method to send an email message. Notice that the arguments of this method
+        #///    are used to set any of the required message headers.
+        #///    </description>
+        #///   </item>
+        #///   <item>
+        #///   <description>Use a try and catch block to catch the errors that can result from the success or
+        #///   failure of this operation.</description>
+        #///   </item>
+        #///  </list>
+        #///  An exception is thrown if an error occurs. If a Simple Mail Transfer Protocol (SMTP) relay server
+        #///  is used to send the message, the indicated status of the message only indicates whether the message
+        #///  is successfully sent to the relay server. You must provide values for the <paramref name="fromAddr" />
+        #///  , <paramref name="toAddr" />
+        #///  , <paramref name="subject" />
+        #///  , and <paramref name="body" />
+        #///   parameters when you call this method. The following optional properties and collections are used
+        #///  by the
+        #///  <c>
+        #///  quickSend
+        #///  </c>
+        #///   method:
+        #///  <list type="bullet">
+        #///   <item>
+        #///    <description>
+        #///    The <c>SysMailer.Priority</c> property.
+        #///    </description>
+        #///   </item>
+        #///   <item>
+        #///    <description>
+        #///    All the time out properties of the <c>timeOutConnect</c>, <c>SysMailer.TimeOutReceive</c>, and
+        #///    <c>SysMailer,TimeOutSend</c> methods.
+        #///    </description>
+        #///   </item>
+        #///   <item>
+        #///    <description>
+        #///    The <c>SysMailer.ReturnReceipt</c> property.
+        #///    </description>
+        #///   </item>
+        #///   <item>
+        #///    <description>
+        #///    The <c>SysMailer.ConfirmRead</c> property.
+        #///    </description>
+        #///   </item>
+        #///   <item>
+        #///    <description>
+        #///    The <c>SMTPRelayServer</c> method collection.
+        #///    </description>
+        #///   </item>
+        #///   <item>
+        #///    <description>
+        #///    The <c>SysMailer.DNSServers</c> collection.
+        #///    </description>
+        #///   </item>
+        #///  </list>
+        #///  The
+        #///  <c>
+        #///  quickSend
+        #///  </c>
+        #///   method does not support HTML email. To send a message that uses an HTML body, call the
+        #///  <c>
+        #///  sendMail
+        #///  </c>
+        #///   method.To specify multiple values for the <paramref name="toAddr" />
+        #///   or <paramref name="cc" />
+        #///   parameters, separate the entries with commas.
+        #/// </remarks>
+        #public void quickSend(str fromAddr, str toAddr, str subject, str body, str cc='', str attachments='')
+        #{
+        #
+        #    SysMailerAddressField tos;
+        #    SysMailerAddressField ccs;
+        #    SysMailerAttachments mailAttachments;
+        #    SysEmailParameters parameters;
+        #
+        #    List emailAddresses;
+        #    ListEnumerator enum;
+        #    ;
+        #
+        #    this.fromAddress(fromAddr);
+        #
+        #    tos = this.tos();
+        #    emailAddresses = SysEmailDistributor::splitEmail(toAddr);
+        #    enum = emailAddresses.getEnumerator();
+        #    while(enum.moveNext())
+        #    {
+        #        tos.appendAddress(enum.current());
+        #    }
+        #
+        #    this.subject(subject);
+        #    this.htmlBody(body);
+        #
+        #    if (!prmisDefault(cc))
+        #    {
+        #        ccs = this.ccs();
+        #        ccs.appendAddress(cc);
+        #    }
+        #
+        #    if (!prmisDefault(attachments))
+        #    {
+        #        mailAttachments = this.attachments();
+        #        mailAttachments.add(attachments);
+        #    }
+        #
+        #    this.priority(1);
+        #
+        #    parameters = SysEmailParameters::find();
+        #
+        #    if (parameters.smtpRelayServerName)
+        #    {
+        #        this.smtpRelayServer(parameters.smtpRelayServerName,parameters.smtpPortNumber,parameters.smtpUserName,SysEmailParameters::password(),parameters.ntlm);
+        #    }
+        #
+        #
+        #    this.sendMail();
+        #
+        #}
+      ENDSOURCE
+      SOURCE #sendMail
+        #/// <summary>
+        #/// Sends an email message.
+        #/// </summary>
+        #/// <remarks>
+        #/// An exception is thrown if an error occurs.
+        #/// </remarks>
+        #// Send mail
+        #public void sendMail()
+        #{
+        #    InteropPermission permission = new InteropPermission(InteropKind::ComInterop);
+        #    ;
+        #
+        #    permission.assert();
+        #
+        #    //BP Deviation Documented
+        #    _com.from(TheSameEmailAddressFromAbove);
+        #
+        #     try {
+        #            _com.send();
+        #        }
+        #    catch {
+        #            checkFailed(_com.error().description());
+        #          }
+        #}
+      ENDSOURCE
+      SOURCE #smtpRelayServer
+        #void smtpRelayServer(str _server, int _port=25, str _userName='',str _password='', boolean _useNTLM=false)
+        #{
+        #    ;
+        #
+        #    _fields.add(#SmtpServer,_server);
+        #    _fields.add(#SmtpServerPort,_port);
+        #
+        #    if (_useNTLM)
+        #    {
+        #        _fields.add(#SmtpAuthenticate,2);
+        #    }
+        #    else if (_userName)
+        #    {
+        #        //basic authentication
+        #        _fields.add(#SmtpAuthenticate,1);
+        #        _fields.add(#SmtpSendUserName,_userName);
+        #        _fields.add(#SmtpSendUserPassword,_password);
+        #    }
+        #    //office
+        #    _fields.add(#SmtpServer,_server);
+        #    _fields.add(#SmtpServerPort,_port);
+        #    _fields.add('http://schemas.microsoft.com/cdo/configuration/smtpusessl',1);
+        #    _fields.add(#SmtpAuthenticate,1);
+        #    _fields.add(#SmtpSendUserName,_userName);
+        #    _fields.add(#SmtpSendUserPassword,_password);
+        #
+        #    _fields.resync();
+        #
+        #}
+      ENDSOURCE
+      SOURCE #subject
+        #/// <summary>
+        #/// Sets the Subject field of your message if you are not using the <c>quickSend</c> method to send the
+        #/// email message.
+        #/// </summary>
+        #/// <param name="theSubject">
+        #/// A string that describes the subject matter of the email message; optional.
+        #/// </param>
+        #/// <returns>
+        #/// The string that describes the subject matter of the email message.
+        #/// </returns>
+        #/// <remarks>
+        #/// Use the <c>theSubject</c> parameter to set the subject field of the email message if you are not
+        #/// using the <c>quickSend</c> method to send the email message. The <c>quickSend</c> method sets the
+        #/// Subject field by using the Subject argument.You should set this property before an email message is
+        #/// sent.
+        #/// </remarks>
+        #// Message subject
+        #public str subject(str theSubject='')
+        #{
+        #    InteropPermission permission = new InteropPermission(InteropKind::ComInterop);
+        #    ;
+        #
+        #    permission.assert();
+        #
+        #    if (!prmisDefault(theSubject))
+        #    {
+        #        if (strLen(theSubject) <= 10485760) // 10 Mb
+        #        {
+        #            //BP Deviation Documented
+        #            _com.subject(theSubject);
+        #        }
+        #        else
+        #        {
+        #            //BP Deviation Documented
+        #            _com.subject('');
+        #            warning("@SYS100254");
+        #        }
+        #    }
+        #
+        #    //BP Deviation Documented
+        #    return _com.subject();
+        #}
+      ENDSOURCE
+      SOURCE #tos
+        #SysMailerAddressField tos()
+        #{
+        #    ;
+        #    return SysMailerAddressField::create(_com,SysmailerAddressFieldType::To);
+        #}
+      ENDSOURCE
+    ENDMETHODS
+  ENDCLASS
+
+***Element: END
