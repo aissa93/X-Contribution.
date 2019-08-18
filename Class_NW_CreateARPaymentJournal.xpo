@@ -1,0 +1,129 @@
+﻿Exportfile for AOT version 1.0 or later
+Formatversion: 1
+
+***Element: CLS
+
+; Microsoft Dynamics AX Class: NW_CreateARPaymentJournal unloaded
+; --------------------------------------------------------------------------------
+  CLSVERSION 1
+  
+  CLASS #NW_CreateARPaymentJournal
+    PROPERTIES
+      Name                #NW_CreateARPaymentJournal
+      Origin              #{C4D4C147-F2A4-44F8-922F-8489FAFC2640}
+    ENDPROPERTIES
+    
+    METHODS
+      SOURCE #MainAccountNum2LedgerDimension
+        #Public LedgerDimensionAccount MainAccountNum2LedgerDimension(MainAccountNum _MainAccountNum)
+        #{
+        #    MainAccount mainAccount = MainAccount::findByMainAccountId(_MainAccountNum);
+        #    container myContainer;
+        #    LedgerDimensionAccount LedgerDimensionAccount;
+        #    if(mainAccount)
+        #    {
+        #        myContainer = [MainAccount.MainAccountId, MainAccount.MainAccountId];
+        #        LedgerDimensionAccount = AxdDimensionUtil::getLedgerAccountId(myContainer);
+        #    }
+        #    return LedgerDimensionAccount;
+        #}
+        #
+      ENDSOURCE
+      SOURCE #ARPaymentJournal
+        #public LedgerJournalId ARPaymentJournal(LedgerJournalNameId _journalName,LedgerJournalType _journalType)
+        #{
+        #
+        #    LedgerJournalTable _ledgerJournalTable;
+        #
+        #
+        #
+        #    _ledgerJournalTable.initValue();
+        #    _ledgerJournalTable.JournalNum   = JournalTableData::newTable(_ledgerJournalTable).nextJournalId();
+        #    _ledgerJournalTable.Posted       = NoYes::No;
+        #    _ledgerJournalTable.JournalName  = _journalName;
+        #    _ledgerJournalTable.JournalType  = _journalType;
+        #    _ledgerJournalTable.initFromLedgerJournalName(_journalName);
+        #    _ledgerJournalTable.insert();
+        #
+        #    return _ledgerJournalTable.JournalNum;
+        #}
+      ENDSOURCE
+      SOURCE #classDeclaration
+        #class NW_CreateARPaymentJournal
+        #{
+        #}
+      ENDSOURCE
+      SOURCE #createARJournalLine
+        #public boolean createARJournalLine(LedgerJournalId _journalNum, Amount _amount, TransDate _aqusetionDate,LedgerJournalACType AccountType, MainAccountNum Accountant,LedgerJournalACType OffestAccountType, MainAccountNum offsetAccount ,LedgerTransType _ledgerTransType)
+        #{
+        #    LedgerJournalTable _ledgerJournalTable;
+        #    LedgerJournalTrans ledgerJournalTrans;
+        #    LedgerJournalTrans_Asset ledgerJournalTrans_Asset;
+        #
+        #    boolean    ret = false;
+        #
+        #
+        #
+        #    ledgerjournalTrans.initValue();
+        #    ledgerJournalTrans.JournalNum = _journalNum;
+        #    ledgerJournalTrans.CurrencyCode      = Ledger::accountingCurrency(CompanyInfo::find().RecId);
+        #    ledgerJournalTrans.AccountType       = AccountType;
+        #    ledgerJournalTrans.TransactionType   = _ledgerTransType;//LedgerTransType::Payment;
+        #    ledgerJournalTrans.Approved          = NoYes::Yes;
+        #    ledgerJournalTrans.Approver          = HcmWorker::userId2Worker(curuserid());
+        #    ledgerJournalTrans.LineNum                              = LedgerJournalTrans::lastLineNum(ledgerJournalTrans.JournalNum) + 1;
+        #    ledgerJournalTrans.TransDate                            = _aqusetionDate;
+        #    if(AccountType != LedgerJournalACType::Ledger)
+        #        ledgerJournalTrans.parmLedgerDimension(DimensionStorage::getDynamicAccount(Accountant,AccountType));
+        #    else
+        #       ledgerJournalTrans.parmLedgerDimension( this.MainAccountNum2LedgerDimension(Accountant));
+        #    //ledgerJournalTrans.LedgerDimension                      = DimensionStorage::getDynamicAccount(_newAsst,LedgerJournalACType::FixedAssets);
+        #    ledgerJournalTrans.accountName();
+        #    ledgerJournalTrans.AmountCurDebit                       = _amount;
+        #    ledgerJournalTrans.OffsetAccountType                    = OffestAccountType;
+        #    //ledgerJournalTrans.OffsetLedgerDimension                = DimensionStorage::getDynamicAccount(_OrginalAsset,LedgerJournalACType::FixedAssets);
+        #
+        #  //  ledgerJournalTrans.parmOffsetAccountType(LedgerJournalACType::FixedAssets );
+        #    if(OffestAccountType != LedgerJournalACType::Ledger)
+        #        ledgerJournalTrans.parmOffsetLedgerDimension(DimensionStorage::getDynamicAccount(offsetAccount,OffestAccountType));
+        #    else
+        #       ledgerJournalTrans.parmLedgerDimension( this.MainAccountNum2LedgerDimension(offsetAccount));
+        #
+        #
+        #
+        #    ledgerJournalTrans.insert();
+        #
+        #     if(ledgerJournalTrans)
+        #        ret = true;
+        #    ttsbegin;
+        #    select forUpdate _ledgerJournalTable where _ledgerJournalTable.JournalNum == _journalNum;
+        #    _ledgerJournalTable.numOfLines = _ledgerJournalTable.numOfLines();
+        #    _ledgerJournalTable.update();
+        #    ttscommit;
+        #    return ret;
+        #}
+      ENDSOURCE
+      SOURCE #main
+        #static void main(Args _args)
+        #{
+        #    LedgerJournalId     journalNum;
+        #    NW_TrespassingFacilitiesFinesTable           _calllerTable ;
+        #    boolean             isLineCreated;
+        #
+        #
+        #    NW_CreateARPaymentJournal ArPaymentJournal = new NW_CreateARPaymentJournal();
+        #
+        #    _calllerTable = _args.record();
+        #
+        #    journalNum = ArPaymentJournal.ARPaymentJournal("04",LedgerJournalType::CustPayment);
+        #    isLineCreated = ArPaymentJournal.createARJournalLine(journalNum,_calllerTable.Amount,_calllerTable.PaymentDate,LedgerJournalACType::Ledger,"611105",LedgerJournalACType::Ledger,"611105",LedgerTransType::Payment);
+        #    if(isLineCreated)
+        #        info(strFmt("Journal Num %1",journalNum));
+        #}
+        #
+        #
+      ENDSOURCE
+    ENDMETHODS
+  ENDCLASS
+
+***Element: END
