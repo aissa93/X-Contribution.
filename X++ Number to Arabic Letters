@@ -1,0 +1,346 @@
+ public Static TempStr numberToArabic(real _num, str cur, str peny)
+    {
+        real    numOfPennies = decround(frac(_num), 2);
+        real    test         = _num - frac(_num);
+        str     zero;
+        str     comma;
+        str     and;
+        str     cent;
+        int     numOfTenths;
+        str 20  ones[19], tenths[9], hundreds, thousands, millions, billions, trillions;
+
+        int64   temp;
+        str 200  returntxt;
+
+        real modOperator(real a1, real a2)
+        {
+            int     tmpi;
+            real    tmp1, tmp2;
+            tmp1 = a1 / a2;
+            tmpi = real2int(tmp1);
+            tmp2 = tmpi;
+            return (tmp1 - tmp2)*a2;
+        }
+
+        str doubleDigit2ARTxt(real doubledigit,boolean _pennies = false)
+        {
+            str     txt;
+            int     firstDigit;
+            real    tempdigit;
+
+            if(_pennies)
+            {
+                firstDigit = doubledigit * 10;
+                doubledigit = doubledigit * 100;
+                if(!firstDigit)
+                {
+                    doubledigit = doubledigit mod 10;
+                    //txt = zero + " " + ones[doubledigit];
+                    txt = ones[doubledigit];
+                    return txt;
+                }
+            }
+            tempdigit = doubledigit;
+            if (tempdigit >= 20)
+            {
+                tempdigit = tempdigit div 10;
+                txt = tenths[tempdigit];
+                doubledigit = doubledigit mod 10;
+            }
+            if (doubledigit >= 1)
+            {
+                txt = txt ?  (ones[doubledigit] + and + txt) : ones[doubledigit];
+            }
+
+            return txt;
+        }
+
+        real checkPower(real  _test,int64 _power)
+        {
+            int64   numOfPower;
+
+            if (_test >= _power)
+            {
+                numOfPower = _test div _power;
+                if (numOfPower >= 100)
+                {
+                    temp = numOfPower div 100;
+
+                    if(temp > 9)// The validation was previously on 2
+                    {
+                        returntxt = returntxt ? (returntxt + and + ones[temp] + ' ' + hundreds) :(returntxt + ' ' + ones[temp] + ' ' + hundreds);
+                    }
+
+                    else
+                    {
+                        switch(temp)
+                        {
+
+                            Case 1:
+                                returntxt = returntxt ? (returntxt + and + hundreds) : (returntxt + ' ' + hundreds);
+                                break;
+                            Case 2:
+                                // TO DO need to insert a label for two hundred in Arabic
+                                returntxt = returntxt ? (returntxt + and + "مائتين") :   returntxt + ' ' + "مائتين";
+                                break;
+                            Case 3:
+                                // TO DO need to insert a label for three hundred in Arabic
+                                returntxt = returntxt ? (returntxt + and + "ثلاثمائة") :   returntxt + ' ' + 'ثلاثمائة';
+                                break;
+                            Case 4:
+                                // TO DO need to insert a label for four hundred in Arabic
+                                returntxt = returntxt ? (returntxt + and + "اربعمائة") :   returntxt + ' ' + "اربعمائة";
+                                break;
+                            Case 5:
+                                // TO DO need to insert a label for five hundred in Arabic
+                                returntxt = returntxt ? (returntxt + and + "خمسمائة") :   returntxt + ' ' + "خمسمائة";
+                                break;
+                            Case 6:
+                                // TO DO need to insert a label for six hundred in Arabic
+                                returntxt = returntxt ? (returntxt + and + "ستمائة") :   returntxt + ' ' + "ستمائة";
+                                break;
+                            Case 7:
+                                // TO DO need to insert a label for seven hundred in Arabic
+                                returntxt = returntxt ? (returntxt + and + "سبعمائة") :   returntxt + ' ' + "سبعمائة";
+                                break;
+                            Case 8:
+                                // TO DO need to insert a label for eight hundred in Arabic
+                                returntxt = returntxt ? (returntxt + and + "ثمانمائة") :   returntxt + ' ' + "ثمانمائة";
+                                break;
+                            Case 9:
+                                // TO DO need to insert a label for nine hundred in Arabic
+                                returntxt = returntxt ? (returntxt + and + "تسعمائة") :   returntxt + ' ' + "تسعمائة";
+                                break;
+
+                        }
+                    }
+                    numOfPower = numOfPower mod 100;
+                }
+                if(numOfPower > 2 && _power > 100)
+                {
+                    returntxt = returntxt ?  (returntxt + and + doubleDigit2ARTxt(real2int(numOfPower))) : (returntxt  + ' ' + doubleDigit2ARTxt(real2int(numOfPower)));
+                }
+                else
+                {
+                    if(returntxt && numOfPower)
+                    {
+                        returntxt = returntxt + and + ' ';
+                    }
+                }
+                switch(_power)
+                {
+                    case 1000000000000 :
+                        {
+                            if( numOfPower == 1)
+                            {
+                                // TO DO need to insert a label for two Thousands' in Arabic
+                                returntxt = returntxt + "واحد تريليون";
+                            }
+                            else if( numOfPower == 2)
+                            {
+                                // TO DO need to insert a label for two trillions in Arabic
+                                returntxt = returntxt + "تريليونين";
+                            }
+                            else
+                            {
+                                returntxt = numOfPower > 10 ||  numOfPower == 1 || numOfPower == 0 ? (returntxt + ' ' + trillions) : (returntxt + ' ' + "تريليونات");
+                            }
+                            _test = modOperator(_test, 1000000000000.00);
+                            break;
+                        }
+                    case 1000000000 :
+                        {
+                            if( numOfPower == 1)
+                            {
+                                // TO DO need to insert a label for two Thousands' in Arabic
+                                returntxt = returntxt + "واحد مليار";
+                            }
+                            else if( numOfPower == 2)
+                            {
+                                // TO DO need to insert a label for two billions in Arabic
+                                returntxt = returntxt + "مليارين";
+                            }
+                            else
+                            {
+                                returntxt = numOfPower > 10 ||  numOfPower == 1 || numOfPower == 0 ? (returntxt + ' ' + billions) : (returntxt + ' ' + "مليارات");
+                            }
+                            _test = modOperator(_test, 1000000000);
+                            break;
+                        }
+                    case 1000000 :
+                        {
+                            if( numOfPower == 1)
+                            {
+                                // TO DO need to insert a label for two Thousands' in Arabic
+                                returntxt = returntxt + "واحد مليون";
+                            }
+                            else if( numOfPower == 2)
+                            {
+                                // TO DO need to insert a label for two Millions in Arabic
+                                returntxt = returntxt + "مليونين";
+                            }
+                            else
+                            {
+
+                                returntxt = numOfPower > 10 || numOfPower == 1 || numOfPower == 0 ? (returntxt + ' ' + millions) : (returntxt + ' ' + "ملايين");
+
+                            }
+                            _test = modOperator(_test, 1000000);
+                            break;
+                        }
+                    case 1000 :
+                        {
+                            if( numOfPower == 1)
+                            {
+                                // TO DO need to insert a label for two Thousands' in Arabic
+                                returntxt = returntxt + "الف";
+                            }
+                            else if( numOfPower == 2)
+                            {
+                                // TO DO need to insert a label for two Thousands' in Arabic
+                                returntxt = returntxt + "الفين";
+                            }
+                            else
+                            {
+                                returntxt = numOfPower > 10 ||  numOfPower == 1 || numOfPower == 0  ? (returntxt + ' ' + thousands) : (returntxt + ' ' + "الاف");
+                            }
+                            _test = modOperator(_test, 1000);
+                            break;
+                        }
+                    case 100 :
+                        {
+                            switch (numOfPower)
+                            {
+                                case 2:
+                                    returntxt = returntxt + "مائتين";
+                                    break;
+
+                                case 3:
+                                    returntxt = returntxt +"ثلاثمائة";
+                                    break;
+
+                                case 4:
+                                    returntxt = returntxt + "اربعمائة";
+                                    break;
+
+                                case 5:
+                                    returntxt = returntxt + "خمسمائة";
+                                    break;
+
+                                case 6:
+                                    returntxt = returntxt + "ستمائة";
+                                    break;
+
+                                case 7:
+                                    returntxt = returntxt + "سبعمائة";
+                                    break;
+
+                                case 8:
+                                    returntxt = returntxt + "ثمانمائة";
+                                    break;
+
+                                case 9:
+                                    returntxt = returntxt + "تسعمائة";
+                                    break;
+
+                                default:
+                                    returntxt = returntxt + ' ' + hundreds;
+                            }
+
+                            _test = modOperator(_test, 100);
+                            break;
+                        }
+                }
+
+            }
+            return _test;
+
+        }
+
+        infolog.language("AR");
+
+
+        and     = ' ' + "@SYS5534" + ' ';
+        comma   = cur;
+        //comma = "@SYS80142";
+        zero    = "@SYS2068";
+        cent    = peny;
+        // cent    = "";
+        ones[1] = "@SYS26620";
+        ones[2] = "@SYS26621";
+        ones[3] = "@SYS26622";
+        ones[4] = "@SYS26626";
+        ones[5] = "@SYS26627";
+        ones[6] = "@SYS26628";
+        ones[7] = "@SYS26629";
+        ones[8] = "@SYS26630";
+        ones[9] = "@SYS26631";
+        ones[10] = "@SYS26632";
+        ones[11] = "@SYS26633";
+        ones[12] = "@SYS26634";
+        ones[13] = "@SYS26635";
+        ones[14] = "@SYS26636";
+        ones[15] = "@SYS26637";
+        ones[16] = "@SYS26638";
+        ones[17] = "@SYS26639";
+        ones[18] = "@SYS26640";
+        ones[19] = "@SYS26641";
+
+        tenths[1] = 'Not used';
+        tenths[2] = "@SYS26643";
+        tenths[3] = "@SYS26644";
+        tenths[4] = "@SYS26645";
+        tenths[5] = "@SYS26646";
+        tenths[6] = "@SYS26647";
+        tenths[7] = "@SYS26648";
+        tenths[8] = "@SYS26649";
+        tenths[9] = "@SYS26650";
+
+        hundreds    = "@SYS26651";
+        thousands   = "@SYS26652";
+        millions    = "@SYS26653";
+        billions    = "@SYS26654";
+        trillions   = "@SYS101697";
+
+        if(test == 0)
+        {
+            returntxt = zero;
+        }
+        else
+        {
+            test = checkPower(test, 1000000000000);
+            test = checkPower(test, 1000000000);
+            test = checkPower(test, 1000000);
+            test = checkPower(test, 1000);
+            test = checkPower(test, 100);
+        }
+
+        if(returntxt && test)
+        {
+            returntxt = returntxt + and + doubleDigit2ARTxt(real2int(test));
+        }
+        else
+        {
+            returntxt = returntxt + ' ' + doubleDigit2ARTxt(real2int(test));
+        }
+
+        if(numOfPennies)
+        {
+            //Removing the stars and addin the pound and cent wording to fullfil the Egyptian requierment
+            returntxt = ' فقط ' + returntxt + ' ' + comma + ' ' + and + doubleDigit2ARTxt(numOfPennies,true) + ' ' + cent + ' لاغير ';
+            //returntxt = '***' + returntxt + ' ' + comma + ' ' + doubleDigit2ARTxt(numOfPennies,true);
+
+        }
+        else
+        {
+            //Removing the stars and the zeros if no cents to fullfil the Egyptian requierment
+            returntxt = ' فقط ' + returntxt + ' ' + comma + ' لاغير ';
+
+            //returntxt = '***' + returntxt + ' ' + comma + ' ' + zero + ' ' + zero;
+        }
+
+
+        infolog.language("EN-US");
+        return returntxt;
+
+    }
