@@ -1,0 +1,19 @@
+--register app and access token--
+
+http://dynamics365musings.com/use-postman-to-call-d365-data-entities/
+
+
+-- get access token and call entity---
+https://dynamics365musings.com/setup-postman-to-call-d365-data-entities/
+
+
+-- setup postman to call service--
+https://dynamics365musings.com/setup-postman-to-call-d365-services/
+
+-- create service--
+https://dynamics365musings.com/create-a-custom-service-in-d365/
+
+
+--use on prime OData and ADFS oAuth2---
+
+https://samuelardilacarreno.com/2020/11/13/use-odata-with-postman-dynamics-365-finance-and-operations-on-premises/
