@@ -1,0 +1,23 @@
+public static amount GetGLAmountForMainAccountbesideAttribute(MainAccountNum _mainAccountNum, Name _dimensionAttributeName, DimensionValue _dimensionValue)
+{
+     generalJournalAccountEntry          generalJournalAccountEntry;
+    DimensionAttributeLevelValueAllView dimAttrViewMainAccount, dimAttrView_2nd;
+    DimensionAttribute                  dimAttrMainAccount, dimAttr_2nd;
+    
+    select sum(AccountingCurrencyAmount) from generalJournalAccountEntry
+    join  dimAttrViewMainAccount 
+        where dimAttrViewMainAccount.ValueCombinationRecId ==  generalJournalAccountEntry.LedgerDimension   
+            && dimAttrViewMainAccount.DisplayValue == _mainAccountNum
+    join dimAttrMainAccount
+        where dimAttrMainAccount.RecId == dimAttrViewMainAccount.DimensionAttribute
+            && dimAttrMainAccount.Name == "MainAccount"
+    //
+    join  dimAttrView_2nd 
+        where dimAttrView_2nd.ValueCombinationRecId ==  generalJournalAccountEntry.LedgerDimension   //5637149079
+            && dimAttrView_2nd.DisplayValue == _dimensionValue
+    join dimAttr_2nd
+        where dimAttr_2nd.RecId == dimAttrView_2nd.DimensionAttribute
+            && dimAttr_2nd.Name == _dimensionAttributeName;
+    
+    return generalJournalAccountEntry.AccountingCurrencyAmount;
+}
