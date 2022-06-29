@@ -17,3 +17,6 @@ https://dynamics365musings.com/create-a-custom-service-in-d365/
 --use on prime OData and ADFS oAuth2---
 
 https://samuelardilacarreno.com/2020/11/13/use-odata-with-postman-dynamics-365-finance-and-operations-on-premises/
+
+-- serialization and deserialization
+https://www.linkedin.com/pulse/json-xml-messages-deserialization-d365-finance-maciej-sondej/
