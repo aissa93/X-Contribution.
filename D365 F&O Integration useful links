@@ -20,3 +20,6 @@ https://samuelardilacarreno.com/2020/11/13/use-odata-with-postman-dynamics-365-f
 
 -- serialization and deserialization
 https://www.linkedin.com/pulse/json-xml-messages-deserialization-d365-finance-maciej-sondej/
+
+--Consume data entities from c#(get token, crud operations 
+https://jatomas.com/en/2023/01/03/consume-dynamics-365-fo-data-entities-cs/
