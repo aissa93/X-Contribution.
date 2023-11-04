@@ -1,0 +1,52 @@
+using System.Net.Http;
+internal final class RunnableClass1
+{
+
+    public static void main(Args _args)
+    {
+        str url = @"URL";
+        Map header = new Map(Types::String, Types::String);
+        str json = '{\r\n\"username\": \"AA\",\r\n\"password\": \"MM\"\r\n}';
+        System.Net.Http.HttpResponseMessage response = RunnableClass1::MakeHttpPostRequestInD365FO(url, header, json);
+        if (response.IsSuccessStatusCode)
+        {
+            info(response.Content.ReadAsStringAsync().Result);
+        }
+        else
+        {
+            error(strFmt("HTTP request failed with status code: " ,response.get_StatusCode()));
+        }
+    }
+
+    static System.Net.Http.HttpResponseMessage MakeHttpPostRequestInD365FO(str _url, Map _header, str _jsonPayload)
+    {
+        System.Net.Http.HttpClient clientzz;
+        System.Net.Http.HttpRequestMessage request;
+        System.Net.Http.HttpResponseMessage response;
+        
+        // Create an instance of HttpClient
+        clientzz = new System.Net.Http.HttpClient();
+ 
+        // Specify the URL for the POST request
+        
+ 
+    // Create an HttpRequestMessage with the HTTP method set to POST
+        request = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod::Post, _url);
+ 
+        // Add the Authorization header
+        MapEnumerator mapEnumerator = _header.getEnumerator();
+        while(mapEnumerator.moveNext())
+        {
+            request.get_Headers().Add(mapEnumerator.currentKey(), mapEnumerator.currentValue());
+        }
+        
+        // Create the content and set the content type
+        request.set_Content(new System.Net.Http.StringContent(_jsonPayload, System.Text.Encoding::UTF8, "application/json"));
+ 
+        // Send the request and get the response
+        response = clientzz.SendAsync(request).Result;
+ 
+        return response;
+    }
+
+}
