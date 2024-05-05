@@ -1,6 +1,6 @@
 We have two scenarios: 
 1. Create number sequence in newly created form 
-	- Create a string EDT to be the typr of the field that will maintaine Sequence number in it.
+	- Create a string EDT to be the type of the field that will maintaine Sequence number in it.
 	- Creat extension class of module parmater table like (BankParameters) as the file in the same branch (BankParameters_Extension) 
 	- Create extension class of number sequence module class like (NumberSeqModuleBank) as the file in the same branch (NumberSeqModuleBank_Extension).
 	- Write the code consume Sequence Number in initiate form.	
