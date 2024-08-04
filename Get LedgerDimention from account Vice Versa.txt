@@ -4,3 +4,11 @@
         
 	//Get LedgerDimension from BankAccountID
         _ledgerDimension = LedgerDynamicAccountHelper::getDynamicAccountFromAccountNumber(_BankAccountID ,LedgerJournalACType::Bank));
+
+//Get Ledgerdimension for account type Ledger
+ MainAccount MainAccount = MainAccount::findByMainAccountId(_mainAccountId);
+ DimensionHierarchyId DimensionHierarchyId = DimensionHierarchy::getAccountStructure(MainAccount.RecId,Ledger::current());
+ DimensionHierarchy DimensionHierarchy = DimensionHierarchy::find(DimensionHierarchyId);
+ DefaultDimensionIntegrationValues ledgerString = _mainAccountId + enum2Str(DimensionParameters::find().DimensionSegmentDelimiter) + Dimession;
+ LedgerAccountDimensionResolver dimResolver = LedgerAccountDimensionResolver::newResolver(ledgerString, DimensionHierarchy.Name);
+ ledgerAccount = dimResolver.resolve();
