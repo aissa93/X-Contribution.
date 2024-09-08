@@ -1,0 +1,9 @@
+Args                 args = new Args();
+str                  menuItemDisplay = MenuItemDisplayStr(DisplayWorker);
+MenuFunction         MenuFunction = new MenuFunction(menuItemDisplay, MenuItemType::Display);
+Query                q = new Query();
+QueryBuildDataSource qbds = q.addDataSource(tableNum(hcmworker));
+QBDS.addRange(fieldNum(hcmworker,RecId)).value(queryValue(driver.worker));
+args.initialQuery(InitialQueryParameter::createByQuery(q));
+args.caller(element);   
+MenuFunction.run(args);
