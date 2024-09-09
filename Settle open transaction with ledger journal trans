@@ -1,0 +1,15 @@
+void settlement(ledgerJournalTrans _ledgerJournalTrans, common  CustVendTransOpen)
+{
+    CustVendOpenTransManager manager = CustVendOpenTransManager::construct(_ledgerJournalTrans);
+    manager.updateTransMarked(CustVendTransOpen, true);
+    manager.updateSettleAmount(CustVendTransOpen, _ledgerJournalTrans.AmountCurCredit);
+    manager.updateSpecTransWithSelectedDate();
+
+    manager.settleMarkedTrans();
+    
+    // If transactions were marked, write back to originating record if needed
+    manager.updateOriginatorForMarkedTrans();
+
+    // update all SpecTrans records with date used to calculate discount
+    manager.updateSpecTransWithSelectedDate();
+}
