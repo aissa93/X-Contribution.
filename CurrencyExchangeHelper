@@ -1,0 +1,5 @@
+ CurrencyExchangeHelper currencyHelper = CurrencyExchangeHelper::newExchangeDate(Ledger::current(), today());
+
+ Amount value = currencyHelper.calculateCurrencyToCurrency("SAR", "USD", 3756.40, true);
+ Amount value2 = currencyHelper.calculateCurrencyToCurrency("USD", "SAR", 1000, true);
+ info(strFmt("3750 SAR to USD = %1  --- 1000 USD to SAR = %2", value, value2));
