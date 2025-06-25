@@ -1,0 +1,42 @@
+One day I have done a very dumy action, we were implemnting an integration between D365 F&O and an E-commerce and after so period we need to delete all the order which has been created in this period and it was a huge number.
+so deleting it from UI was a horrible store, so I decided to delete them from SQL level, so running a query to delete from salestable and salesline. unfortunatly this caused an issue in the inventory module: 
+=> get transaction which does not have sales orderwe have use the following query 
+select DISTINCT  ReferenceId  from INVENTTRANSORIGIN 
+ join inventtrans on inventtrans.InventTransOrigin = INVENTTRANSORIGIN.RECID
+where REFERENCECATEGORY = 0 and ReferenceId not in  (select salesid from SALESTABLE where SALESTABLE.DATAAREAID = INVENTTRANSORIGIN.DATAAREAID) and inventtrans.StatusIssue = 6
+
+
+1- we have those SO details in inverntory transaction, so I started to correct it using the following query:
+--✅ Step 1: Delete from InventTrans
+DELETE IT
+FROM InventTrans IT
+JOIN InventTransOrigin ITO ON IT.InventTransOrigin = ITO.RecId
+WHERE ITO.ReferenceCategory = 0
+  AND IT.StatusIssue = 6
+  AND( ITO.DataAreaId = 'oqat' OR  ITO.DataAreaId = 'RSAU' OR   ITO.DataAreaId = 'ROMN' OR  ITO.DataAreaId = 'ruae' OR  ITO.DataAreaId = 'rkwt' OR  ITO.DataAreaId = 'rbhr' )
+  AND NOT EXISTS (
+      SELECT 1
+      FROM SalesTable ST
+      WHERE ST.SalesId = ITO.ReferenceId
+        AND ST.DataAreaId = ITO.DataAreaId
+  );
+
+--✅ Step 2: Delete from InventTransOrigin
+DELETE ITO
+FROM InventTransOrigin ITO
+WHERE ITO.ReferenceCategory = 0
+  AND( ITO.DataAreaId = 'oqat' OR  ITO.DataAreaId = 'RSAU' OR   ITO.DataAreaId = 'ROMN' OR  ITO.DataAreaId = 'ruae' OR  ITO.DataAreaId = 'rkwt' OR  ITO.DataAreaId = 'rbhr' )
+  AND NOT EXISTS (
+      SELECT 1
+      FROM SalesTable ST
+      WHERE ST.SalesId = ITO.ReferenceId
+        AND ST.DataAreaId = ITO.DataAreaId
+  )
+  AND NOT EXISTS (
+      SELECT 1
+      FROM InventTrans IT
+      WHERE IT.InventTransOrigin = ITO.RecId
+  );
+2- we have false values of onorder qty on onhand list report, so we run Consistency check feature under system adminstration => periodic => database => Consistency check.
+- Module: Inventory management => item => on-hand
+- chick/fix: fix
