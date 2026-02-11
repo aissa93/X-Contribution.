@@ -1,0 +1,6 @@
+select  t4.NAME, t2.DISPLAYVALUE from DimensionAttributeValueGroupCombination t1
+join DimensionAttributeLevelValue t2 on t1.DimensionAttributeValueGroup = t2.DimensionAttributeValueGroup
+join DimensionAttributeValue t3 on t3.RECID = t2.DimensionAttributeValue
+join DimensionAttribute t4
+on t4 .RecId = t3.DimensionAttribute
+where t1.DIMENSIONATTRIBUTEVALUECOMBINATION = ledgerDimesion
