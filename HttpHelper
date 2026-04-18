@@ -1,0 +1,61 @@
+using System.Net.Http;
+using System.Collections.Generic;
+class HttpHelper
+{
+
+    public static System.Net.HttpWebResponse ConsumService(str  body, Map _headerKeyValuePair, str url, str method = "post", str contentType = "application/json")
+    {
+        System.Net.HttpWebRequest       request;
+        System.Net.HttpWebResponse      response;
+        CLRObject                       clrObj;
+        System.Exception                ex;
+        System.Net.WebHeaderCollection httpHeader;
+        System.IO.Stream                requestStream, responseStream;
+        System.IO.StreamReader          streamRead;
+        System.IO.StreamWriter          streamWriter;
+        MapEnumerator                   mapEnum;
+        boolean                         Result;
+        Object ResponseContract;
+        try
+        {
+            httpHeader = new System.Net.WebHeaderCollection();
+            new InteropPermission(InteropKind::ClrInterop).assert();
+            clrObj = System.Net.WebRequest::Create(url);
+            request = clrObj;
+
+
+            request.set_Headers(httpHeader);
+            request.set_Method(method);//Post
+            if(method != "GET")
+                request.set_ContentType(contentType);
+                     
+            System.Net.WebHeaderCollection headers = request.Headers;
+            mapEnum = _headerKeyValuePair.getEnumerator();
+            while(mapEnum.moveNext())
+            {
+                System.String headerKey = mapEnum.currentKey();
+                System.String headerValue = mapEnum.currentValue();
+                headers.Add(headerKey,headerValue);
+            }
+            //requestStream = request.GetRequestStream();
+            //streamWriter = new System.IO.StreamWriter(request.GetRequestStream());
+            //streamWriter.Write(body); /// writing JSON
+            //streamWriter.Flush();
+            //streamWriter.Close();
+            response = request.GetResponse();
+          
+            //System.IO.StreamReader  streamRead = new System.IO.StreamReader(response.GetResponseStream());
+            //str returnValue = streamRead.ReadToEnd();
+            //ResponseContract = FormJsonSerializer::deserializeObject(classNum(ResponseContract), returnValue);
+            //Result = response.StatusCode;//streamRead.ReadToEnd();
+        }
+        catch
+        {
+            ex = CLRInterop::getLastException().GetBaseException();
+            Error(ex.get_Message());
+            
+        }
+        return  response;
+    }
+
+}
