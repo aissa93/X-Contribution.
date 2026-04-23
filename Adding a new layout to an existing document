@@ -1,0 +1,14 @@
+Adding a new layout to an existing document will follow those 2 steps:
+
+1. Update the PrintMgmtReportFormat table to add records for the new document layout.
+ Modify the populate method. Add the appropriate condition for which the new layout should be available. Make use of the local methods inside the populate method. like the following Line of code 
+  addOther(PrintMgmtDocumentType::SalesFreeTextInvoice, ssrsReportStr("Report Name", "Report Design Name"), ssrsReportStr("Report Name", "Report Design Name"), #NoCountryRegionId);
+
+2. Update the PrintMgmtDocType class to handle the new document layout.
+ Modify the getDefaultReportFormat method. Add the appropriate condition for the new layout. Return the name of your new report layout combination, utilizing the ssrsReportStr intrinsic
+function like the following condtion
+
+if (SysCountryRegionCode::isLegalEntityInCountryRegion([#isoSA]))
+{
+    return ssrsReportStr("Report Name", "Report Design Name");
+}
